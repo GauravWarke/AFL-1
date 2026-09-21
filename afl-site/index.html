@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Ladder Lies</title>
+<meta name="description" content="What the 2026 AFL draw was actually worth, in points of margin.">
+
+<link rel="canonical" href="__SITE_URL__">
+<meta property="og:type" content="website">
+<meta property="og:title" content="The Ladder Lies">
+<meta property="og:description" content="Home ground advantage is mostly not the ground. It is the other side's flight.">
+<meta property="og:url" content="__SITE_URL__">
+<meta property="og:image" content="__SITE_URL__og-draw-cost.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bar chart of what each AFL club's 2026 draw was worth in points of margin.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="__SITE_URL__og-draw-cost.png">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="bar">
+    <nav class="pillnav" aria-label="Sections"><a href="#overview" aria-current="page" data-nav="overview">Overview</a><a href="#ladder" data-nav="ladder">Three ladders</a><a href="#draw" data-nav="draw">The draw</a><a href="#club" data-nav="club">Club room</a><a href="#lab" data-nav="lab">Match lab</a><a href="#talk" data-nav="talk">Straight talk</a></nav>
+    <div class="topact">
+      <div class="clubpick">
+        <label for="clubSel">My club</label>
+        <select id="clubSel"><option value="">Choose&hellip;</option></select>
+      </div>
+    </div>
+  </div>
+</header>
+<div class="clubstrip" id="clubStrip"><div class="wrap"><div class="csrow" id="csRow"></div></div></div>
+
+<main>
+<section data-route="overview" class="active">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>Home ground advantage is mostly <em>not the ground</em>.</h1>
+    <p class="blurb">It is the other side&rsquo;s flight. Playing at your own venue cannot be told
+      apart from zero across 2,291 matches. Having flown interstate is the one fixture effect
+      that survives the test.</p>
+    <div class="capsule" id="heroCapsule"></div>
+    <div class="hero-eff" id="heroEff"></div>
+    <div class="herofoot">
+      <a class="btn-lime" href="#ladder">Start with the ladder &rarr;</a>
+    </div>
+  </div></div>
+  <div class="slab"><span class="scrollnote">scroll down</span><div class="wrap">
+    <div class="secintro"><h2>Five ways in</h2>
+      <p>The same model output, read five ways. Start anywhere; the ladder is the shortest
+         route to the point.</p></div>
+
+    <div class="audbar">
+      <span class="audlabel">Who&rsquo;s asking?</span>
+      <span class="audbtns">
+        <button type="button" id="aud-fan"  aria-pressed="true">A fan</button>
+        <button type="button" id="aud-club" aria-pressed="false">A club</button>
+        <button type="button" id="aud-biz"  aria-pressed="false">A business</button>
+      </span>
+      <span class="audnote" id="audNote"></span>
+    </div>
+    <div class="cards">
+      <a class="mcard" href="#ladder"><span class="num">01</span><span class="tagpill">Three ladders</span><h3>Three ladders</h3><p>Actual, earned, and level: the same season read three ways.</p><span class="go">Open &rarr;</span></a>
+      <a class="mcard" href="#draw"><span class="num">02</span><span class="tagpill">The draw</span><h3>The draw</h3><p>What the fixture was worth, club by club.</p><span class="go">Open &rarr;</span></a>
+      <a class="mcard" href="#club"><span class="num">03</span><span class="tagpill">Club room</span><h3>Club room</h3><p>One club, every measure, with reliability attached.</p><span class="go">Open &rarr;</span></a>
+      <a class="mcard" href="#lab"><span class="num">04</span><span class="tagpill">Match lab</span><h3>Match lab</h3><p>Simulate any two clubs and watch the estimate converge.</p><span class="go">Open &rarr;</span></a>
+      <a class="mcard" href="#talk"><span class="num">05</span><span class="tagpill">Straight talk</span><h3>Straight talk</h3><p>Definitions, reliability, and what this cannot tell you.</p><span class="go">Open &rarr;</span></a></div>
+    <div class="limepanel">
+      <div class="lp-l">
+        <h3>Built to be checked, not admired</h3>
+        <p>Every number here is generated from one model output file and rendered at page load,
+           so the prose cannot drift from the data behind it. The nulls are reported next to the
+           findings, because a method that only publishes what it found is not a method.</p>
+        <a class="btn-lime" href="#talk">See the limitations &rarr;</a>
+      </div>
+      <div class="lp-r" id="limeFigs"></div>
+    </div>
+  </div></div>
+</section>
+<section data-route="ladder">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>Three ladders</h1>
+    <p class="blurb">Actual, earned, and level: the same season read three ways.</p>
+  </div></div>
+  <div class="slab tail"><div class="wrap"><section id="v-ladder" role="tabpanel" aria-labelledby="t-ladder">
+  <p class="lede" id="ldLadder">Three versions of the same season. <strong>Actual</strong> is the ladder the AFL published. <strong>Earned</strong> replays every match on scoring shots, with all 18 clubs kicking at the league rate, because goal accuracy barely carries from one half of a season to the next. <strong>Level</strong> goes one step further and takes out the draw each club was handed. Only the third version compares like with like.</p>
+
+  <div class="stack">
+    <div class="panel gfpanel" id="gfPanel"></div>
+
+    <div class="panel hero">
+      <div class="ph"><h2>The eight that played, and the eight that earned it</h2><span class="eyebrow">2026 home &amp; away</span></div>
+      <div class="eights" id="eights"></div>
+      <div class="pad"><p class="heronote" id="eightNote"></p></div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2>Actual &rarr; earned &rarr; level</h2><span class="eyebrow">competition points, and where each club lands</span></div>
+      <div class="tblwrap"><table class="data" id="ladtbl"></table></div>
+      <div class="legend">
+        <span><i style="background:var(--cool)"></i> Climbs once the season is levelled. Better than its record says</span>
+        <span><i style="background:var(--warm)"></i> Slides. Flattered by kicking, by the draw, or by both</span>
+      </div>
+    </div>
+
+    <div class="two-wide">
+      <div class="panel">
+        <div class="ph"><h2>Where each club moves, and why</h2><span class="eyebrow">ladder places</span></div>
+        <div class="chartbox"><div id="slopeChart"></div></div>
+        <div class="pad" style="padding-top:0"><p class="footnote" style="margin:0">Left dot is where the club finished. Right dot is where it lands once kicking luck and the draw are removed. The bar between splits the move into its two causes.</p></div>
+      </div>
+      <div class="panel pad">
+        <p class="eyebrow" style="margin:0 0 12px">How to read your club</p>
+        <div id="readClub">
+        <p style="margin:0 0 14px; font-size:15px; color:var(--ink-2)">Every club already pays for a rating system, and those answer <em>who is best</em>. The question here is one nobody publishes: <b style="color:var(--ink)">how much of the ladder was settled before round one?</b></p>
+        <p style="margin:0 0 14px; font-size:15px; color:var(--ink-2)">If your club climbs on <b style="color:var(--cool)">earned</b>, the ball was unkind to it. Expect some of that to come back next year on its own.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+</section>
+<section data-route="draw">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>The draw</h1>
+    <p class="blurb">What the fixture was worth, club by club.</p>
+  </div></div>
+  <div class="slab tail"><div class="wrap"><section id="v-draw" role="tabpanel" aria-labelledby="t-draw">
+  <p class="lede" id="ldDraw">Twenty-three rounds, 17 opponents. The arithmetic forces every club to play six teams twice, and which six comes down to what broadcasts well. Clubs complain about it every October. The league says the draw is fair. <strong>Neither side has ever put a number on it.</strong> Here is one.</p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="ph"><h2>What the fixture is actually worth</h2><span class="eyebrow" id="fxMeta"></span></div>
+      <div class="tblwrap"><table class="data" id="fxtbl"></table></div>
+      <div class="pad">
+        <div class="callout warm" id="coDraw">
+          <b>Two beliefs this data does not back up.</b> Clubs raise the six-day break every season. Once you control for who is playing whom, it is worth nothing you can measure. The bigger surprise is home ground advantage, which mostly vanishes once travel is pulled out of it. Ten Victorian clubs share Melbourne venues, so hosting a cross-town rival buys you very little. What actually costs the visitor is the flight, not the crowd.
+        </div>
+      </div>
+    </div>
+
+    <div class="two-wide">
+      <div class="panel">
+        <div class="ph"><h2>What each club&rsquo;s draw was worth</h2><span class="eyebrow" id="drawUnit">points of margin vs an average draw</span></div>
+        <div class="chartbox"><div id="drawChart"></div></div>
+        <div class="pad" style="padding-top:0; padding-bottom:0"><p class="footnote" style="margin:0" id="drawGloss"></p></div>
+        <div class="legend">
+          <span><i style="background:var(--cool)"></i> Harder draw than average</span>
+          <span><i style="background:var(--warm)"></i> Easier draw than average</span>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="panel">
+          <div class="ph"><h2>The travel ledger</h2><span class="eyebrow">net points, and trips flown</span></div>
+          <div class="chartbox"><div id="travelChart"></div></div>
+          <div class="pad" style="padding-top:0"><p class="footnote" style="margin:0">The two Perth clubs fly more than anyone and still finish on the right side of this ledger. They pay the cost once; everyone visiting them pays the largest penalty on the schedule.</p></div>
+        </div>
+        <div class="panel">
+          <div class="ph"><h2>The split</h2></div>
+          <div class="tblwrap"><table class="data narrow" id="drawSplit"></table></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel pad">
+      <p class="eyebrow" style="margin:0 0 14px">What this is for</p>
+      <div class="usecases">
+        <div><h3>A club</h3><p>Evidence instead of a grievance. &ldquo;Our draw cost us this many points&rdquo; is something you can put in front of the Commission. It also resets expectations inside the club. A list manager who knows the fixture was worth two wins reads a 10th-place finish very differently.</p></div>
+        <div><h3>The league</h3><p>Fixture equity is currently asserted, never audited. A published figure is defensible where an assertion is not.</p></div>
+        <div><h3>A fan</h3><p>&ldquo;We got a rubbish draw&rdquo; stops being talkback and becomes a number you can check.</p></div>
+        <div class="lead"><h3>Next season, before it starts</h3><p>Everything this needs comes from the fixture: venues, dates, opponents. No results required. So the same audit can run the day the next fixture drops in October, months before anyone kicks a ball. Nothing like that is published today.</p></div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+</section>
+<section data-route="club">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>Club room</h1>
+    <p class="blurb">One club, every measure, with reliability attached.</p>
+  </div></div>
+  <div class="slab tail"><div class="wrap"><section id="v-club" role="tabpanel" aria-labelledby="t-club">
+  <p class="lede" id="ldClub">Everything about one club, written out in plain language. Pick your side.</p>
+
+  <div class="stack">
+    <div class="panel pad">
+      <div style="display:grid; grid-template-columns:minmax(200px,320px) 1fr; gap:18px; align-items:end">
+        <div class="fld"><label for="club">Club</label><select id="club"></select></div>
+        <p class="footnote" style="margin:0" id="clubStrap"></p>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2 id="clubName">&mdash;</h2><span class="eyebrow" id="clubPos"></span></div>
+      <div class="tiles" id="clubTiles"></div>
+      <div class="verdicts" id="clubVerdicts"></div>
+    </div>
+
+    <div class="two-wide">
+      <div class="panel">
+        <div class="ph"><h2>Every match, earned vs actual</h2><span class="eyebrow">bar = chance differential</span></div>
+        <div class="chartbox"><div id="gameLog"></div></div>
+        <div class="legend">
+          <span><i style="background:var(--cool)"></i> Created more chances than the opponent</span>
+          <span><i style="background:var(--warm)"></i> Created fewer</span>
+          <span><i style="background:var(--ink-3); border-radius:50%"></i> Dot = the result they actually got</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>The whole competition</h2><span class="eyebrow">chances made vs allowed</span></div>
+        <div class="chartbox"><div id="quad"></div></div>
+        <div class="pad" style="padding-top:0"><p class="footnote" style="margin:0">Right means better attack, up means better defence. The good sides sit in the top-right corner and the gap is obvious. This one picture sorts the competition more cleanly than the ladder manages.</p></div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+</section>
+<section data-route="lab">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>Match lab</h1>
+    <p class="blurb">Simulate any two clubs and watch the estimate converge.</p>
+  </div></div>
+  <div class="slab tail"><div class="wrap"><section id="v-lab" role="tabpanel" aria-labelledby="t-lab">
+  <p class="lede" id="ldLab">Pick any two clubs. Your browser plays the match <strong>20,000 times</strong>, drawing scoring shots for each side and then converting them into goals and behinds. That two-step is what the whole system rests on.</p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="pad">
+        <div class="picker">
+          <div class="fld"><label for="home">Home side</label><select id="home"></select></div>
+          <div class="vs">V</div>
+          <div class="fld"><label for="away">Away side</label><select id="away"></select></div>
+        </div>
+        <div class="opts">
+          <label class="chk" for="neutral"><input type="checkbox" id="neutral"> Neutral venue</label>
+          <button class="btn" id="run" type="button">Simulate <span class="simN-text">20,000</span></button>
+          <button class="btn ghost" id="swap" type="button">Swap sides</button>
+        </div>
+        <div class="simbar">
+          <label for="simN">Runs</label>
+          <select id="simN">
+            <option value="2000">2,000</option>
+            <option value="10000">10,000</option>
+            <option value="20000" selected>20,000</option>
+            <option value="50000">50,000</option>
+            <option value="100000">100,000</option>
+          </select>
+          <div id="simStat"></div>
+        </div>
+        <div class="presets" id="presets"></div>
+      </div>
+      <div class="verdict" id="verdict"></div>
+      <div class="chartbox">
+        <p class="eyebrow" style="margin:0 0 10px">Every result the model can imagine, from <span class="simN-text">20,000</span> matches</p>
+        <div id="hist"></div>
+      </div>
+      <div class="legend">
+        <span><i style="background:var(--cool)"></i> Home side wins</span>
+        <span><i style="background:var(--warm)"></i> Away side wins</span>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="ph"><h2>Why this number</h2><span class="eyebrow" id="whysub"></span></div>
+      <div class="verdicts" id="whyRows"></div>
+      <div class="pad">
+        <div class="callout warm">
+          <b>Watch what the model refuses to believe.</b> It will not accept that a club is simply a good kick for goal. A side shooting well above the league average keeps only about a quarter of that edge in its forecast, since that is all that survives into the next half of a season. Chance creation is a different story. That it takes almost at face value.
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+</section>
+<section data-route="talk">
+  <div class="stage"><div class="inner">
+    <p class="eyebrow-lg">AFL 2026 &middot; fixture equity</p>
+    <h1>Straight talk</h1>
+    <p class="blurb">Definitions, reliability, and what this cannot tell you.</p>
+  </div></div>
+  <div class="slab tail"><div class="wrap"><section id="v-talk" role="tabpanel" aria-labelledby="t-talk">
+  <p class="lede" id="ldTalk">Every number in this system, explained for someone who has never read a stats page. The last column tells you <strong>how much of it is real</strong>, and that column is the one nobody else prints.</p>
+
+  <div class="stack">
+    <div class="panel">
+      <div class="ph"><h2>The metrics, in plain words</h2><span class="eyebrow">and how much repeats</span></div>
+      <div class="verdicts" id="glossary"></div>
+      <div class="pad">
+        <div class="callout">
+          <b>How &ldquo;how much repeats&rdquo; is measured.</b> Split every club&rsquo;s season into odd and even matches, work the number out twice, and see whether the two halves agree. If they do, the number is measuring the team. If they do not, it is measuring the weather. Across 2015&ndash;2026 that is 216 club-seasons, and it is the single most useful thing in this whole project.
+        </div>
+      </div>
+    </div>
+
+    <div class="two-wide">
+      <div class="panel">
+        <div class="ph"><h2>How accurate is any of this?</h2><span class="eyebrow">tested on matches it never saw</span></div>
+        <div class="tiles" id="accTiles"></div>
+        <div class="pad">
+          <p style="margin:0 0 12px; font-size:15px; color:var(--ink-2)" id="accCopy"></p>
+          <p style="margin:0; font-size:15px; color:var(--ink-2)">So there is real signal here, and the model is also <b style="color:var(--ink)">clearly worse in September</b>. Use the finals figure when you talk about finals. Three things drive the gap, and only the last one is fixable. Finals involve the best sides alone, so there is less to get right. The model rarely commits past 75%, so it collects little credit when it calls a blowout. And it knows nothing about a week off, or a knockout played interstate.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>What is not here</h2></div>
+        <div class="pad">
+          <p style="margin:0 0 14px; font-size:15px; color:var(--ink-2)">Ask a player how games are won and you will hear about contested ball, pressure, territory and structure. They are right. <b style="color:var(--ink)">None of it is in this data.</b> The feed gives you goals, behinds, scores, the venue, the date and two team names. Nothing else.</p>
+          <p style="margin:0 0 14px; font-size:15px; color:var(--ink-2)">No disposals, then. No inside 50s, no clearances, no tackle counts, no contested possession, no player records, no injury lists, no quarter-by-quarter scores. Any metric here claiming to measure those would be made up.</p>
+          <p style="margin:0 0 16px; font-size:15px; color:var(--ink-2)">Scoring shots do capture the <b style="color:var(--ink)">end product</b> of all that work. You never see the tackle, but you see whether the chain finished with a shot at goal. On a public feed that is as far as anyone can honestly go, and it gets you most of the way.</p>
+          <p class="footnote" style="margin:0; padding-top:14px; border-top:1px solid var(--line-soft)">Match results come from the <a href="https://api.squiggle.com.au">Squiggle API</a>, the same underlying source as AFL Tables. Every figure on this site is rebuilt from that feed, so the numbers move as the season does.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="ph"><h2>What a percentage means</h2><span class="eyebrow">ten real matches</span></div>
+        <div class="fixture" id="fixture"></div>
+        <div class="slider">
+          <div class="val" id="pval">50%</div>
+          <p class="cap" id="pcap">your chance the home side wins</p>
+          <input type="range" id="prange" min="2" max="98" value="50" step="1" aria-label="Your win probability for the home side">
+          <div class="ticks"><span>2%</span><span>25%</span><span>50%</span><span>75%</span><span>98%</span></div>
+          <div style="display:flex; gap:10px; margin-top:16px">
+            <button class="btn" id="lock" type="button" style="flex:1">Lock it in</button>
+            <button class="btn ghost" id="next" type="button" hidden style="flex:1">Next match</button>
+          </div>
+        </div>
+        <div class="reveal" id="reveal" hidden></div>
+        <div class="tally" id="tally"></div>
+        <div class="pad">
+          <p class="footnote" style="margin:0" id="running"></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section></div></div>
+</section>
+</main>
+
+<footer class="sitefoot">
+  <div class="wrap">
+    <div>
+      <p style="font-family:Oswald,sans-serif;text-transform:uppercase;color:#E8EBE7;margin:0 0 10px">The Ladder Lies</p>
+      <small>An audit of what the 2026 AFL fixture was worth, in points. Built in R and plain
+      JavaScript. Every figure reads from one model output file; none are typed in by hand.
+      I run this every October.</small>
+    </div>
+    <div class="fnav">
+      <a href="afl-draw-methodology.pdf">Methodology (PDF)</a>
+      <a href="https://github.com/GauravWarke/AFL-1">Code</a>
+      <a href="https://www.linkedin.com/in/gaurav-warke-b5493b394">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- tooltip layer for the charts -->
+<div id="tip" role="status" aria-live="polite"></div>
+
+<!-- data first: app.js reads window.__AFL__ at load -->
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

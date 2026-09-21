@@ -1,0 +1,557 @@
+/* The Ladder Lies -- stylesheet.
+   Two parts: the original data-display styles (panels, tables, charts), then
+   the site theme (stage, slab, nav, cards).
+
+   One rule matters more than the rest: --cool and --warm are the chart colours
+   and they are chosen so the two ends stay distinguishable with colour-vision
+   deficiency. Every chart also shows polarity by side-of-zero and a signed
+   label, so nothing depends on colour alone. Do not repoint them at the
+   theme accent. */
+
+:root{color-scheme:light}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+
+
+
+
+
+/* ---------------------------------------------------------------------------
+   Palette. The diverging pair is validated for colour-vision deficiency:
+   light  #0F6E96 / #C4642A   dark  #0090C4 / #D2702C
+   Every chart also encodes polarity by POSITION (left/right of zero) and by a
+   direct label, so nothing here is carried by colour alone.
+--------------------------------------------------------------------------- */
+:root{
+  --ground:#F3F4F1; --panel:#FFFFFF; --sunk:#E9EBE6; --raise:#FDFDFC;
+  --line:#D2D6CE; --line-soft:#E4E7E1; --grid:#DFE3DB;
+  --ink:#151B17; --ink-2:#48524D; --ink-3:#79837C;
+  --cool:#0F6E96; --cool-soft:#D9E8EF;   /* ladder understates you  */
+  --warm:#C4642A; --warm-soft:#F3E2D5;   /* ladder flatters you     */
+  --accent:#0F6E96;
+  --good:#2E7D5B; --flag:#A8503F;
+  --shadow:0 1px 2px rgba(21,27,23,.05), 0 10px 26px -16px rgba(21,27,23,.25);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0E1412; --panel:#151D1A; --sunk:#1C2622; --raise:#1F2A25;
+    --line:#2B3632; --line-soft:#232E29; --grid:#27322E;
+    --ink:#E9EEEA; --ink-2:#A5B0AA; --ink-3:#74827B;
+    --cool:#0090C4; --cool-soft:#123240;
+    --warm:#D2702C; --warm-soft:#38231544;
+    --accent:#3FA9D4;
+    --good:#5DBE93; --flag:#DE8A76;
+    --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -18px rgba(0,0,0,.75);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0E1412; --panel:#151D1A; --sunk:#1C2622; --raise:#1F2A25;
+  --line:#2B3632; --line-soft:#232E29; --grid:#27322E;
+  --ink:#E9EEEA; --ink-2:#A5B0AA; --ink-3:#74827B;
+  --cool:#0090C4; --cool-soft:#123240;
+  --warm:#D2702C; --warm-soft:#38231544;
+  --accent:#3FA9D4;
+  --good:#5DBE93; --flag:#DE8A76;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 12px 30px -18px rgba(0,0,0,.75);
+}
+*{box-sizing:border-box}
+body{margin:0; background:var(--ground); color:var(--ink);
+  font-family:"Source Serif 4",Georgia,serif; font-size:16px; line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1120px; margin:0 auto; padding-inline:20px}
+h1,h2,h3,.disp{font-family:Oswald,"Arial Narrow",sans-serif; font-weight:500;
+  letter-spacing:.01em; text-wrap:balance; margin:0}
+.mono,.n{font-family:"IBM Plex Mono",ui-monospace,monospace; font-variant-numeric:tabular-nums}
+.eyebrow{font-family:"IBM Plex Mono",monospace; font-size:11px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3)}
+
+header.top{border-bottom:1px solid var(--line); background:var(--panel)}
+.mast{display:flex; flex-wrap:wrap; gap:22px; align-items:flex-end;
+  justify-content:space-between; padding-block:26px 20px}
+.mast h1{font-size:clamp(30px,5.4vw,50px); line-height:.98; text-transform:uppercase; letter-spacing:.015em}
+.mast .sub{color:var(--ink-2); font-size:15.5px; max-width:52ch; margin-top:10px}
+.mast .kicker{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--warm);
+  letter-spacing:.04em; margin-top:12px; border-left:3px solid var(--warm); padding-left:10px}
+
+nav.tabs{border-bottom:1px solid var(--line); background:var(--panel); position:sticky; top:0; z-index:30}
+.tabrow{display:flex; overflow-x:auto; scrollbar-width:none}
+.tabrow::-webkit-scrollbar{display:none}
+.tab{appearance:none; background:none; border:0; border-bottom:2px solid transparent;
+  font-family:Oswald,sans-serif; font-size:14px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-3); padding:14px 18px; cursor:pointer; white-space:nowrap}
+.tab:hover{color:var(--ink)}
+.tab[aria-current="true"]{color:var(--ink); border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent); outline-offset:-2px}
+
+main{padding-block:36px 72px}
+section[hidden]{display:none!important}
+.lede{font-size:17.5px; line-height:1.62; color:var(--ink-2); max-width:66ch; margin:0 0 30px}
+.lede strong{color:var(--ink); font-weight:600}
+
+.panel{background:var(--panel); border:1px solid var(--line); border-radius:3px}
+.pad{padding:24px 26px}
+.ph{display:flex; align-items:baseline; justify-content:space-between; gap:14px;
+  padding:16px 26px; border-bottom:1px solid var(--line-soft)}
+.ph h2{font-size:16px; text-transform:uppercase; letter-spacing:.07em}
+.stack{display:grid; gap:26px}
+.two{display:grid; grid-template-columns:1fr 1fr; gap:26px; align-items:start}
+.two-wide{display:grid; grid-template-columns:1.45fr 1fr; gap:26px; align-items:start}
+
+.callout{border-left:3px solid var(--accent); background:var(--sunk); padding:15px 18px;
+  font-size:14.5px; color:var(--ink-2)}
+.callout b{color:var(--ink); font-weight:600}
+.callout.warm{border-left-color:var(--warm)}
+.footnote{font-size:13px; color:var(--ink-3); line-height:1.55; max-width:74ch}
+a{color:var(--accent)}
+
+/* ---- tables ---- */
+.tblwrap{overflow-x:auto}
+table.data{width:100%; border-collapse:collapse; font-size:14px; min-width:560px}
+table.data.narrow{min-width:330px}
+table.data th,table.data td{padding:11px 14px; border-bottom:1px solid var(--line-soft);
+  text-align:right; white-space:nowrap}
+table.data th:first-child,table.data td:first-child{text-align:left; white-space:normal}
+table.data thead th{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:500; border-bottom:1px solid var(--line)}
+table.data td.n{font-family:"IBM Plex Mono",monospace; font-variant-numeric:tabular-nums}
+table.data .tm{font-family:Oswald,sans-serif; font-size:15px; letter-spacing:.02em}
+table.data tbody tr:hover td{background:var(--sunk)}
+tr.spot td{background:var(--warm-soft)}
+tr.spot td:first-child{box-shadow:inset 3px 0 0 var(--warm)}
+
+/* diverging bar cell: zero line in the middle, 4px rounded data end */
+.dv{position:relative; width:150px; height:18px; display:block}
+.dv .zero{position:absolute; left:50%; top:0; bottom:0; width:1px; background:var(--line)}
+.dv i{position:absolute; top:3px; height:12px; display:block; border-radius:2px}
+.dv i.p{left:50%; background:var(--warm); border-radius:0 4px 4px 0}
+.dv i.m{right:50%; background:var(--cool); border-radius:4px 0 0 4px}
+.movechip{font-family:"IBM Plex Mono",monospace; font-size:11px; padding:1px 6px;
+  border-radius:2px; letter-spacing:.03em}
+.movechip.up{color:var(--cool); background:var(--cool-soft)}
+.movechip.dn{color:var(--warm); background:var(--warm-soft)}
+.movechip.eq{color:var(--ink-3)}
+
+/* ---- charts ---- */
+.chartbox{padding:22px 26px 12px}
+.chartbox svg{display:block; width:100%; height:auto; max-width:100%}
+.legend{display:flex; flex-wrap:wrap; gap:18px; padding:0 26px 18px; font-size:13px; color:var(--ink-2)}
+.legend span{display:inline-flex; align-items:center; gap:7px}
+.legend i{width:11px; height:11px; border-radius:2px; display:block}
+.tip{position:fixed; pointer-events:none; z-index:100; background:var(--ink); color:var(--ground);
+  font-family:"IBM Plex Mono",monospace; font-size:11.5px; line-height:1.5; padding:7px 10px;
+  border-radius:3px; opacity:0; transition:opacity .1s; max-width:250px; box-shadow:var(--shadow)}
+.tip.on{opacity:1}
+.tip b{font-family:Oswald,sans-serif; font-size:13px; letter-spacing:.02em}
+
+/* ---- stat tiles ---- */
+.tiles{display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:1px;
+  background:var(--line-soft); border-block:1px solid var(--line-soft)}
+.tile{background:var(--panel); padding:15px 18px}
+.tile .k{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3); display:block}
+.tile .v{font-family:"IBM Plex Mono",monospace; font-size:27px; font-weight:600;
+  font-variant-numeric:tabular-nums; line-height:1.1; margin-top:5px; display:block}
+.tile .w{font-size:13px; color:var(--ink-2); margin-top:3px; display:block; line-height:1.4}
+.tile .v.up{color:var(--warm)} .tile .v.dn{color:var(--cool)}
+
+/* ---- verdict rows (plain english) ---- */
+.verdicts{display:grid; gap:1px; background:var(--line-soft)}
+.vr{background:var(--panel); padding:15px 20px; display:grid;
+  grid-template-columns:130px 1fr auto; gap:16px; align-items:center}
+.vr .lab{font-family:Oswald,sans-serif; font-size:14px; text-transform:uppercase;
+  letter-spacing:.03em; color:var(--ink)}
+.vr .say{font-size:14.5px; color:var(--ink-2); line-height:1.45}
+.vr .say b{color:var(--ink); font-weight:600}
+.vr .num{font-family:"IBM Plex Mono",monospace; font-size:19px; font-weight:600; text-align:right}
+@media (max-width:640px){ .vr{grid-template-columns:1fr auto; gap:6px 12px} .vr .say{grid-column:1/-1} }
+
+/* trust meter */
+.trust{display:flex; align-items:center; gap:9px}
+.trust .bar{width:74px; height:7px; background:var(--sunk); border-radius:2px; overflow:hidden}
+.trust .bar i{display:block; height:100%; border-radius:2px}
+.trust .lv{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+
+/* ---- controls ---- */
+select,input[type=range]{font-family:Oswald,sans-serif}
+select{font-size:16px; background:var(--sunk); color:var(--ink); border:1px solid var(--line);
+  border-radius:2px; padding:10px 11px; width:100%; min-width:0}
+select:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent); outline-offset:1px}
+.btn{font-family:Oswald,sans-serif; font-size:14px; letter-spacing:.08em; text-transform:uppercase;
+  background:var(--ink); color:var(--ground); border:1px solid var(--ink);
+  padding:10px 20px; border-radius:2px; cursor:pointer}
+.btn:hover{background:var(--accent); border-color:var(--accent); color:#fff}
+.btn.ghost{background:transparent; color:var(--ink-2); border-color:var(--line)}
+.btn.ghost:hover{color:var(--ink); border-color:var(--ink-3); background:transparent}
+.fld{display:flex; flex-direction:column; gap:6px; min-width:0}
+.fld label{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3)}
+.picker{display:grid; grid-template-columns:1fr auto 1fr; gap:14px; align-items:end}
+.vs{font-family:Oswald,sans-serif; font-size:13px; color:var(--ink-3); padding-bottom:11px; letter-spacing:.1em}
+.opts{display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-top:16px;
+  padding-top:16px; border-top:1px dashed var(--line-soft)}
+.chk{display:flex; gap:8px; align-items:center; font-size:14px; color:var(--ink-2); cursor:pointer}
+.chk input{accent-color:var(--accent); width:16px; height:16px}
+
+/* match lab verdict */
+.verdict{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-soft);
+  border-block:1px solid var(--line-soft)}
+.side{background:var(--panel); padding:20px 22px}
+.side.fav{background:var(--sunk)}
+.side .role{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3)}
+.side .tm{font-family:Oswald,sans-serif; font-size:19px; text-transform:uppercase; line-height:1.15; margin-top:4px}
+.side .p{font-family:"IBM Plex Mono",monospace; font-size:40px; font-weight:600; line-height:1.05; margin-top:10px}
+.side.fav .p{color:var(--accent)}
+.side .p small{font-size:18px; font-weight:400; color:var(--ink-3)}
+.side .freq{font-size:14px; color:var(--ink-2); margin-top:4px}
+.side .line{font-family:"IBM Plex Mono",monospace; font-size:13.5px; color:var(--ink-2);
+  margin-top:12px; padding-top:10px; border-top:1px solid var(--line-soft)}
+.side .line b{color:var(--ink)}
+
+/* live match cards */
+.mcard{display:grid; grid-template-columns:1fr auto 1fr; border-block:1px solid var(--line-soft)}
+.mcard + .mcard{border-top:0}
+.mteam{padding:18px 20px; background:var(--panel)}
+.mteam.r{text-align:right}
+.mteam.lead{background:var(--sunk)}
+.mteam .nm{font-family:Oswald,sans-serif; font-size:18px; text-transform:uppercase; line-height:1.15}
+.mteam .pp{font-family:"IBM Plex Mono",monospace; font-size:31px; font-weight:600; margin-top:8px; line-height:1}
+.mteam.lead .pp{color:var(--accent)}
+.mteam .sc{font-family:"IBM Plex Mono",monospace; font-size:13px; color:var(--ink-2); margin-top:8px}
+.mmid{display:grid; place-items:center; padding:0 12px; background:var(--panel);
+  font-family:Oswald,sans-serif; font-size:12px; color:var(--ink-3); letter-spacing:.1em;
+  border-inline:1px solid var(--line-soft)}
+.hitchip{display:inline-block; font-family:"IBM Plex Mono",monospace; font-size:10px;
+  letter-spacing:.08em; text-transform:uppercase; padding:2px 6px; border-radius:2px; color:#fff}
+.hitchip.h{background:var(--cool)} .hitchip.m{background:var(--warm)}
+
+/* beat the model */
+.fixture{padding:22px; text-align:center; border-bottom:1px solid var(--line-soft)}
+.fixture .mu{font-family:Oswald,sans-serif; font-size:clamp(19px,3.4vw,26px);
+  text-transform:uppercase; line-height:1.15; margin-top:8px}
+.fixture .mu em{font-style:normal; color:var(--ink-3); font-size:.62em; letter-spacing:.08em; padding:0 8px}
+.slider{padding:20px}
+.slider .val{font-family:"IBM Plex Mono",monospace; font-size:32px; font-weight:600;
+  text-align:center; color:var(--accent)}
+.slider .cap{text-align:center; font-size:13.5px; color:var(--ink-3); margin-bottom:14px}
+input[type=range]{width:100%; accent-color:var(--accent); height:24px}
+.ticks{display:flex; justify-content:space-between; font-family:"IBM Plex Mono",monospace;
+  font-size:10px; color:var(--ink-3)}
+.reveal{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line-soft)}
+.rv{background:var(--panel); padding:15px 18px; text-align:center}
+.rv .who{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3)}
+.rv .n{font-family:"IBM Plex Mono",monospace; font-size:24px; font-weight:600; margin-top:4px}
+.rv .sub{font-size:12.5px; color:var(--ink-3)}
+.rv.better .n{color:var(--cool)} .rv.worse .n{color:var(--warm)}
+.tally{display:flex; flex-wrap:wrap; gap:6px; padding:13px 20px; border-top:1px solid var(--line-soft); align-items:center}
+.pip{width:22px; height:22px; border:1px solid var(--line); border-radius:2px; display:grid;
+  place-items:center; font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+.pip.w{background:var(--cool); border-color:var(--cool); color:#fff}
+.pip.l{background:var(--warm); border-color:var(--warm); color:#fff}
+
+footer{border-top:1px solid var(--line); margin-top:54px; padding-block:26px 40px;
+  font-size:13px; color:var(--ink-3)}
+
+
+/* ---- audience switch ----------------------------------------------------- */
+.aud{display:flex; align-items:center; gap:10px; flex-wrap:wrap; padding:10px 0 0}
+.aud .lbl{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3)}
+.audbtns{display:inline-flex; border:1px solid var(--line); border-radius:99px;
+  overflow:hidden; background:var(--sunk)}
+.audbtns button{appearance:none; border:0; background:none; cursor:pointer;
+  font-family:Oswald,sans-serif; font-size:13px; letter-spacing:.04em;
+  color:var(--ink-3); padding:7px 15px}
+.audbtns button + button{border-left:1px solid var(--line)}
+.audbtns button:hover{color:var(--ink)}
+.audbtns button[aria-pressed="true"]{background:var(--accent); color:#fff}
+.audbtns button:focus-visible{outline:2px solid var(--accent); outline-offset:2px}
+.audnote{font-size:13px; color:var(--ink-3); max-width:46ch; line-height:1.5}
+[data-tech="off"] .tech{display:none}
+
+/* ---- grand final band ---------------------------------------------------- */
+.gfpanel{box-shadow:var(--shadow); overflow:hidden}
+.gfhead{display:flex; flex-wrap:wrap; align-items:baseline; justify-content:space-between;
+  gap:12px; padding:16px 26px; border-bottom:1px solid var(--line-soft)}
+.gfhead h2{font-size:16px; text-transform:uppercase; letter-spacing:.07em}
+.gfbody{display:grid; grid-template-columns:1fr auto 1fr; border-bottom:1px solid var(--line-soft)}
+.gfside{padding:22px 26px}
+.gfside.r{text-align:right}
+.gfside.lead{background:var(--sunk)}
+.gfside .nm{font-family:Oswald,sans-serif; font-size:22px; text-transform:uppercase; line-height:1.1}
+.gfside .pp{font-family:"IBM Plex Mono",monospace; font-size:38px; font-weight:600; line-height:1; margin-top:10px}
+.gfside.lead .pp{color:var(--accent)}
+.gfside .meta{font-family:"IBM Plex Mono",monospace; font-size:12px; color:var(--ink-3); margin-top:10px; line-height:1.6}
+.gfvs{display:grid; place-items:center; padding:0 16px; border-inline:1px solid var(--line-soft)}
+.gfvs span{font-family:Oswald,sans-serif; font-size:12px; letter-spacing:.14em; color:var(--ink-3)}
+.gfstats{display:grid; grid-template-columns:repeat(auto-fit,minmax(170px,1fr)); gap:1px; background:var(--line-soft)}
+.gfstat{background:var(--panel); padding:16px 20px}
+.gfstat .k{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.11em;
+  text-transform:uppercase; color:var(--ink-3); display:block}
+.gfstat .v{font-family:"IBM Plex Mono",monospace; font-size:25px; font-weight:600; line-height:1.1;
+  margin-top:5px; display:block}
+.gfstat .w{font-size:13px; color:var(--ink-2); margin-top:4px; display:block; line-height:1.45}
+.gfstat.flag .v{color:var(--warm)}
+@media (max-width:700px){
+  .gfbody{grid-template-columns:1fr}
+  .gfside.r{text-align:left}
+  .gfvs{border-inline:0; border-block:1px solid var(--line-soft); padding:8px}
+}
+
+/* ---- hero: the two eights, side by side ---------------------------------- */
+.hero{box-shadow:var(--shadow)}
+.eights{display:grid; grid-template-columns:1fr auto 1fr; gap:0; border-block:1px solid var(--line-soft)}
+.col8{padding:22px 26px; background:var(--panel)}
+.col8.right{background:var(--sunk)}
+.col8 h3{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.14em;
+  text-transform:uppercase; color:var(--ink-3); font-weight:500; margin:0 0 4px}
+.col8 .cap{font-family:Oswald,sans-serif; font-size:15px; text-transform:uppercase;
+  letter-spacing:.03em; color:var(--ink); margin:0 0 14px}
+.eightlist{list-style:none; margin:0; padding:0; display:grid; gap:3px}
+.eightlist li{display:grid; grid-template-columns:22px 1fr auto; gap:10px; align-items:center;
+  padding:6px 9px; border-radius:2px; font-family:Oswald,sans-serif; font-size:15px;
+  letter-spacing:.02em; background:transparent}
+.eightlist li .rk{font-family:"IBM Plex Mono",monospace; font-size:11px; color:var(--ink-3)}
+.eightlist li .tag{font-family:"IBM Plex Mono",monospace; font-size:9.5px; letter-spacing:.08em;
+  text-transform:uppercase; padding:2px 6px; border-radius:2px; color:#fff}
+.eightlist li.out{background:var(--warm-soft); box-shadow:inset 3px 0 0 var(--warm)}
+.eightlist li.out .tag{background:var(--warm)}
+.eightlist li.in{background:var(--cool-soft); box-shadow:inset 3px 0 0 var(--cool)}
+.eightlist li.in .tag{background:var(--cool)}
+.eightmid{display:grid; place-items:center; padding:0 18px; background:var(--panel);
+  border-inline:1px solid var(--line-soft)}
+.eightmid span{font-family:Oswald,sans-serif; font-size:12px; letter-spacing:.14em;
+  color:var(--ink-3); writing-mode:vertical-rl; text-transform:uppercase}
+.heronote{margin:0; font-size:15.5px; line-height:1.6; color:var(--ink-2); max-width:78ch}
+.heronote b{color:var(--ink); font-weight:600}
+
+/* ---- use cases ----------------------------------------------------------- */
+.usecases{display:grid; grid-template-columns:repeat(auto-fit,minmax(215px,1fr)); gap:22px}
+.usecases h3{font-family:Oswald,sans-serif; font-size:14px; text-transform:uppercase;
+  letter-spacing:.04em; margin:0 0 7px; color:var(--ink)}
+.usecases p{margin:0; font-size:14.5px; color:var(--ink-2); line-height:1.55}
+.usecases .lead h3{color:var(--cool)}
+.usecases .lead{border-left:2px solid var(--cool); padding-left:16px}
+
+/* ---- match lab presets --------------------------------------------------- */
+.presets{display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-top:14px;
+  padding-top:14px; border-top:1px dashed var(--line-soft)}
+.presets .lbl{font-family:"IBM Plex Mono",monospace; font-size:10px; letter-spacing:.12em;
+  text-transform:uppercase; color:var(--ink-3); margin-right:2px}
+.chip{font-family:Oswald,sans-serif; font-size:13px; letter-spacing:.02em; cursor:pointer;
+  background:var(--sunk); color:var(--ink-2); border:1px solid var(--line);
+  padding:6px 12px; border-radius:99px}
+.chip:hover{color:var(--ink); border-color:var(--ink-3)}
+
+@media (max-width:760px){
+  .eights{grid-template-columns:1fr}
+  .eightmid{border-inline:0; border-block:1px solid var(--line-soft); padding:8px}
+  .eightmid span{writing-mode:horizontal-tb}
+}
+
+/* grid and flex children default to min-width:auto, which lets a wide table or
+   card push the whole page sideways. Nothing here may exceed its track. */
+main,section,.stack,.two,.two-wide,.panel,.tblwrap,.mcard,.tiles,.tile,.eights,.col8,
+.gfpanel,.gfbody,.gfside,.gfstats,.gfstat,
+.usecases,.vr,.verdicts,.verdict,.side,.mteam,.chartbox,.pad,.ph,.stack>*,.two>*,.two-wide>*{min-width:0}
+.ph{flex-wrap:wrap}
+.tblwrap{max-width:100%}
+
+@media (max-width:860px){ .two,.two-wide{grid-template-columns:1fr} }
+@media (max-width:620px){
+  .picker{grid-template-columns:1fr} .vs{text-align:center; padding:0}
+  .verdict{grid-template-columns:1fr}
+  .mcard{grid-template-columns:1fr}
+  .mteam.r{text-align:left}
+  .mmid{padding:6px; border-inline:0; border-block:1px solid var(--line-soft)}
+  .pad,.ph,.chartbox,.legend,.slider,.tally,.col8,.gfhead,.gfside,.gfstat{padding-inline:16px}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important; transition:none!important}}
+
+/* ===========================================================================
+   Reference build: near-black stage, white slab lifted over it on a large
+   radius, heavy condensed display type, one lime accent.
+
+   On the lime. The earlier pass put it as a large fill against near-black at
+   64% chroma and it was punishing. The reference never does that -- the lime
+   sits on WHITE, as small tag pills and one figure column, and never behind
+   body text. Placed that way it measures 14.07:1 against its own dark ink and
+   reads comfortably. So the rule here is: lime is a FILL, never a text colour.
+   As text on white it is 1.26:1, which is why it is never used that way.
+
+   Chart colours are untouched. --cool / --warm stay on the CVD-validated pair,
+   so nothing in a figure is ever carried by this hue.
+   =========================================================================== */
+:root{
+  --blk:#0E0E0E;
+  --blk-2:#181818;
+  --lime:#D4F24E;
+  --lime-ink:#141A06;
+  --grey:#6E6E6E;
+  --soft:#F2F2F0;
+  --hair:#E6E6E2;
+  --slab-r:44px;
+
+  --display:Anton,"Oswald","Arial Narrow",Impact,sans-serif;
+  --body:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+body{background:var(--blk);font-family:var(--body);-webkit-font-smoothing:antialiased}
+.wrap,.inner{max-width:1140px;margin:0 auto;padding:0 22px}
+
+/* --------------------------------------------------------------- pill nav */
+.topbar{position:sticky;top:0;z-index:70;padding:16px 20px;background:transparent}
+.topbar .bar{max-width:1140px;margin:0 auto;display:flex;align-items:center;gap:12px}
+
+.pillnav{display:flex;align-items:center;gap:2px;margin:0 auto 0 0;padding:5px;
+  background:rgba(28,28,28,.82);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.08);border-radius:999px;overflow-x:auto}
+.pillnav a{display:inline-block;padding:9px 16px;border-radius:999px;text-decoration:none;
+  font-size:13px;color:#B4B4B4;white-space:nowrap;transition:background .16s,color .16s}
+.pillnav a:hover{color:#fff}
+.pillnav a[aria-current="page"]{background:#fff;color:var(--blk);font-weight:600}
+.topact{display:flex;align-items:center;gap:8px;flex:0 0 auto;margin-left:auto}
+
+@media (max-width:980px){.topbar .bar{flex-wrap:wrap}.pillnav{order:3;width:100%;margin:0}}
+
+/* ------------------------------------------------------------------- stage */
+.stage{background:var(--blk);color:#fff;padding:30px 20px 96px;position:relative}
+.eyebrow-lg{font-family:var(--body);font-size:12.5px;letter-spacing:.2px;color:#A6A6A6;
+  text-transform:none;margin:0 0 14px}
+.stage h1{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(42px,9vw,112px);line-height:.88;letter-spacing:-.5px;margin:0 0 22px;max-width:14ch}
+.stage h1 em{font-style:normal;color:var(--lime)}
+.stage .blurb{font-family:var(--body);font-size:clamp(14px,1.4vw,16px);line-height:1.6;
+  max-width:52ch;color:#A6A6A6;margin:0 0 28px}
+
+/* the reference's countdown block, re-pointed at model output */
+.capsule{display:inline-flex;flex-wrap:wrap;background:rgba(255,255,255,.06);
+  border:1px solid rgba(255,255,255,.1);border-radius:14px;overflow:hidden;margin:0 0 20px}
+.capsule .c{padding:14px 22px;text-align:center;border-right:1px solid rgba(255,255,255,.1)}
+.capsule .c:last-child{border-right:0}
+.capsule .c b{display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(24px,3.2vw,34px);line-height:1;color:#fff;letter-spacing:.5px}
+.capsule .c b.acc{color:var(--lime)}
+.capsule .c span{display:block;margin-top:6px;font-size:10px;letter-spacing:.8px;
+  text-transform:uppercase;color:#8A8A8A}
+.hero-eff{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 24px}
+.hero-eff .he{border:1px solid rgba(255,255,255,.13);border-radius:10px;padding:9px 13px;
+  font-family:var(--mono);font-size:11px;color:#A6A6A6}
+.hero-eff .he b{font-size:14px;display:block;margin-bottom:2px;color:#fff}
+.hero-eff .he.sig b{color:var(--lime)}
+.herofoot{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn-lime{display:inline-flex;align-items:center;gap:9px;background:var(--lime);color:var(--lime-ink);
+  border:0;border-radius:999px;padding:14px 26px;font-family:var(--display);font-weight:400;
+  font-size:15px;letter-spacing:.4px;text-transform:uppercase;cursor:pointer;text-decoration:none}
+
+/* ------------------------------------------- the divide: slab over the stage */
+.slab{background:#fff;border-radius:var(--slab-r) var(--slab-r) 0 0;margin-top:-56px;
+  padding:0 0 74px;position:relative;z-index:2}
+.slab.tail{border-radius:var(--slab-r);margin-bottom:0}
+.scrollnote{display:block;text-align:center;font-size:11.5px;color:#9A9A9A;
+  padding:20px 0 4px;letter-spacing:.2px}
+.slab > .wrap{padding-top:34px}
+.secintro{text-align:center;max-width:58ch;margin:0 auto 40px}
+.secintro h2{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(30px,5.4vw,58px);line-height:.96;letter-spacing:-.3px;margin:0 0 14px;color:var(--blk)}
+.secintro p{font-size:13.5px;line-height:1.65;color:var(--grey);margin:0}
+
+/* -------------------------------------------------------------- route cards */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(224px,1fr));gap:14px}
+.mcard{position:relative;display:flex;flex-direction:column;justify-content:flex-end;
+  min-height:238px;padding:20px;border-radius:18px;text-decoration:none;overflow:hidden;
+  background:var(--soft);border:1px solid var(--hair);cursor:pointer;
+  transition:transform .2s,box-shadow .2s}
+.mcard:hover{transform:translateY(-4px);box-shadow:0 16px 34px rgba(14,14,14,.13)}
+.mcard .tagpill{position:absolute;top:14px;right:14px;background:var(--lime);color:var(--lime-ink);
+  font-size:10.5px;font-weight:600;letter-spacing:.2px;padding:6px 12px;border-radius:999px;border:0}
+.mcard .num{position:absolute;top:12px;left:18px;font-family:var(--display);font-weight:400;
+  font-size:56px;line-height:1;color:#E2E2DE}
+.mcard h3{font-family:var(--display);font-weight:400;text-transform:uppercase;font-size:22px;
+  letter-spacing:.2px;margin:0 0 7px;color:var(--blk);position:relative}
+.mcard p{margin:0;font-size:12.5px;line-height:1.5;color:var(--grey);position:relative}
+.mcard .go{margin-top:13px;font-size:11.5px;color:var(--blk);font-weight:600;position:relative}
+
+/* ------------------------------------- dark figure panel with lime column */
+.limepanel{display:grid;grid-template-columns:1.35fr .65fr;gap:0;border-radius:24px;
+  overflow:hidden;background:var(--blk);color:#fff;margin-top:36px;border:0}
+.limepanel .lp-l{padding:40px 36px}
+.limepanel .lp-l h3{font-family:var(--display);font-weight:400;text-transform:uppercase;
+  font-size:clamp(26px,4vw,44px);line-height:.98;letter-spacing:-.2px;margin:0 0 16px;max-width:13ch;color:#fff}
+.limepanel .lp-l p{font-size:13.5px;line-height:1.7;color:#A6A6A6;max-width:46ch;margin:0 0 24px}
+.limepanel .lp-r{background:var(--lime);color:var(--lime-ink);display:flex;flex-direction:column;
+  justify-content:center;border:0;margin:14px 14px 14px 0;border-radius:18px}
+.limepanel .lp-r .f{padding:26px 22px;text-align:center;border-bottom:1px solid rgba(20,26,6,.14)}
+.limepanel .lp-r .f:last-child{border-bottom:0}
+.limepanel .lp-r .f b{display:block;font-family:var(--display);font-weight:400;
+  font-size:clamp(30px,5vw,52px);line-height:1;letter-spacing:.5px}
+.limepanel .lp-r .f span{display:block;margin-top:5px;font-size:10.5px;letter-spacing:.7px;
+  text-transform:uppercase;opacity:.75}
+@media (max-width:820px){
+  .limepanel{grid-template-columns:1fr}
+  .limepanel .lp-r{margin:0 14px 14px}
+}
+
+/* ------------------------------------------------------------- club strip */
+.clubpick{display:flex;align-items:center;gap:7px}
+.clubpick label{font-size:10px;letter-spacing:.8px;text-transform:uppercase;color:#8A8A8A}
+.clubpick select{font-family:var(--body);font-size:12.5px;padding:9px 13px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.16);background:rgba(28,28,28,.82);color:#EDEDED;
+  cursor:pointer;max-width:160px}
+.clubstrip{display:none;background:#fff;border-bottom:1px solid var(--hair)}
+.clubstrip.on{display:block}
+.clubstrip .wrap{padding-top:11px;padding-bottom:11px}
+.csrow{display:flex;flex-wrap:wrap;gap:7px 22px;align-items:baseline}
+.csrow .cname{font-family:var(--display);font-size:16px;letter-spacing:.3px;color:var(--blk)}
+.csrow .ci{font-family:var(--mono);font-size:11px;color:var(--grey)}
+.csrow .ci b{font-size:12.5px;color:var(--blk);margin-left:5px}
+.csrow .ci b.up{color:var(--cool)} .csrow .ci b.dn{color:var(--warm)}
+
+/* ------------------------------------------------------------ sim controls */
+.simbar{display:flex;flex-wrap:wrap;gap:9px 15px;align-items:center;padding:12px 14px;
+  background:var(--soft);border:1px solid var(--hair);border-radius:12px;margin-bottom:14px}
+.simbar label{font-size:10px;letter-spacing:.9px;text-transform:uppercase;color:#8A8A8A}
+.simbar select{font-family:var(--mono);font-size:12.5px;padding:7px 11px;border:1px solid var(--hair);
+  border-radius:8px;background:#fff;color:var(--blk);cursor:pointer}
+#simStat{display:flex;flex-wrap:wrap;gap:5px 15px;margin-left:auto}
+#simStat .sm{font-family:var(--mono);font-size:10.5px;color:var(--grey)}
+#simStat .sm b{color:var(--blk);font-size:12px}
+
+/* ------------------------------------------- display type across all pages */
+.ph h2,.panel h2{font-family:var(--display)!important;font-weight:400!important;
+  text-transform:uppercase;letter-spacing:.2px}
+.usecases h3,.mcard h3{font-family:var(--display);font-weight:400}
+.tm,.cname{font-family:var(--display);font-weight:400;letter-spacing:.2px}
+
+/* ------------------------------------------------------------------ footer */
+.sitefoot{background:var(--blk);color:#8A8A8A;padding:46px 22px 58px}
+.sitefoot .wrap{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;align-items:flex-start}
+.sitefoot a{color:#D6D6D6}
+.sitefoot .fnav{display:flex;flex-wrap:wrap;gap:14px;font-size:13px}
+.sitefoot small{font-size:11.5px;line-height:1.75;display:block;max-width:56ch}
+
+/* ----------------------------------------------------------------- routing */
+[data-route]{display:none}
+[data-route].active{display:block}
+
+/* The reference is a light design with a dark stage. Honouring the system dark
+   preference here would fight that, so the stage stays dark and the slab stays
+   white in both -- only the chart surface tokens follow the original sheet. */
+
+
+/* ---------------------------------------------------------------------------
+   Audience switch. Same numbers, three readings -- the figures never change,
+   only how they are explained. The choice is remembered and applies to every
+   section, so it is set once rather than per page.
+   --------------------------------------------------------------------------- */
+.audbar{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:0 0 26px;
+  padding:14px 16px;background:var(--soft);border:1px solid var(--hair);border-radius:14px}
+.audlabel{font-family:var(--display);font-size:15px;text-transform:uppercase;
+  letter-spacing:.3px;color:var(--blk)}
+.audbtns{display:inline-flex;gap:4px;padding:4px;background:#fff;
+  border:1px solid var(--hair);border-radius:999px}
+.audbtns button{border:0;background:none;padding:8px 15px;border-radius:999px;cursor:pointer;
+  font-family:var(--body);font-size:12.5px;color:var(--grey)}
+.audbtns button:hover{color:var(--blk)}
+.audbtns button[aria-pressed="true"]{background:var(--lime);color:var(--lime-ink);font-weight:600}
+.audnote{font-size:12.5px;color:var(--grey);flex:1 1 220px;min-width:0}
