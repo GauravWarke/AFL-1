@@ -1,0 +1,84 @@
+# Run the whole R pipeline end to end.
+#
+#     source("R/99_run_all.R")   # from the project root in RStudio
+#
+# The bake-off is the slow part: seven models refitted before every round of
+# the season. It is chunked and resumable -- each round is written to
+# outputs/bakeoff/ as it finishes, and rounds already done are skipped -- so
+# this can be interrupted and re-run without losing work. That matters in
+# RStudio, where a single multi-minute call blocks the console.
+
+PROJ <- "C:/Users/GAURAV/OneDrive/Desktop/AFL"
+
+source(file.path(PROJ, "R", "03_bakeoff.R"))
+source(file.path(PROJ, "R", "04_simulate.R"))
+source(file.path(PROJ, "R", "05_app_data.R"))
+
+run_all <- function(season = 2026, n_sims = 20000L, chunk = 4L) {
+
+  banner("1. Bake-off: which model predicts best?")
+  repeat {
+    st <- bakeoff_chunk(season, max_rounds = chunk)
+    cat("  rounds remaining:", st$remaining, "\n")
+    if (isTRUE(st$complete)) break
+  }
+  preds <- collect_bakeoff()
+  if (!nrow(preds) && file.exists(p_out("bakeoff_preds_2026.csv")))
+    preds <- read.csv(p_out("bakeoff_preds_2026.csv"), stringsAsFactors = FALSE)
+  write.csv(preds, p_out("bakeoff_preds_2026.csv"), row.names = FALSE)
+
+  sc <- score_bakeoff(preds)
+  write.csv(sc, p_out("model_scores.csv"), row.names = FALSE)
+  print(as.data.frame(sc), row.names = FALSE, digits = 4)
+
+  banner("2. Are the gaps real?")
+  best <- sc$model[1]
+  for (other in setdiff(sc$model, best)) {
+    r <- compare_models(preds, best, other)
+    fmt_row("  %s vs %-6s  diff %+.4f  95%% CI [%+.4f, %+.4f]  p=%.3f  %s",
+            best, other, r$diff, r$lo, r$hi, r$p,
+            ifelse(r$p < 0.05, "significant", "tied"))
+  }
+
+  banner("3. Validate the engine on the OLD format, 2015-2025")
+  m <- load_matches(); feat <- build_features(m)
+  val <- list()
+  for (s in 2016:2025) {
+    tr <- feat[feat$stage == "home_and_away" & feat$season <= s, ]
+    fv <- suppressWarnings(MODELS[[best]](tr))
+    pj <- simulate_finals(fv, build_ladder(m, s), home_venues(m, s), list(),
+                          n_sims = 5000L, wildcard = FALSE, seed = 1000 + s)
+    bad <- check_invariants(pj, wildcard = FALSE)
+    gf <- m[m$season == s & m$stage == "grand_final", ]
+    if (!nrow(gf)) next
+    champ <- if (gf$margin[1] > 0) gf$home[1] else gf$away[1]
+    val[[length(val) + 1]] <- data.frame(
+      season = s, premier = champ,
+      p_given = pj$p_premier[match(champ, pj$team)],
+      favourite = pj$team[which.max(pj$p_premier)],
+      p_fav = max(pj$p_premier), invariants_ok = length(bad) == 0)
+  }
+  val <- bind_rows(val)
+  write.csv(val, p_out("engine_validation_R.csv"), row.names = FALSE)
+  print(val, row.names = FALSE)
+  # Exact Poisson-binomial rather than a normal approximation: ten seasons is
+  # far too few for the approximation, and the whole point is honesty about
+  # whether the model is overconfident.
+  pmf <- Reduce(function(d, p) convolve(d, rev(c(1 - p, p)), type = "open"),
+                val$p_fav, init = 1)
+  wins <- sum(val$premier == val$favourite)
+  fmt_row("\n  favourite won %d of %d | expected %.2f | P(<=%d) = %.3f",
+          wins, nrow(val), sum(val$p_fav), wins, sum(pmf[1:(wins + 1)]))
+  fmt_row("  all invariants passed: %s", all(val$invariants_ok))
+
+  banner("4. Project the 2026 finals and build the app data")
+  d <- save_app_data(season, n_sims = n_sims)
+  proj <- d$proj[order(-d$proj$p_premier), ]
+  for (i in seq_len(nrow(proj))) with(proj[i, ],
+    fmt_row("  %-24s %5.1f%%  %s", team, 100 * p_premier, freq))
+
+  banner("Done")
+  cat("  outputs/model_scores.csv, engine_validation_R.csv, app_data.rds\n")
+  cat("  launch the dashboard with:  shiny::runApp('shiny')\n")
+  invisible(d)
+}

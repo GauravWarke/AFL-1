@@ -1,0 +1,112 @@
+# Cross-check in R: is AFL goal accuracy a repeatable skill?
+#
+# This reproduces the headline reliability result from src/ida_afl.py in a
+# different language, on purpose. Several bugs in an earlier version were
+# found only because an R implementation and a Python one disagreed about a
+# number that neither had flagged as an error. A second implementation is a
+# cheap independent check on a result the rest of the model rests on.
+#
+# Expected (from Python):
+#     league conversion   0.5286
+#     binomial reliability 0.324
+#     split-half (SB)      0.246
+#
+# Requires: data/processed/matches.csv, produced by src/ingest_afl.py
+#
+#     Rscript R/01_reliability.R
+#
+# NOTE: not executed in the environment this project was built in -- there is
+# no R there. Run it yourself; if the numbers differ from the header above,
+# trust neither until you have found out why.
+
+suppressPackageStartupMessages({
+  library(dplyr)
+  library(tidyr)
+})
+
+# Resolve the data file whether this is run from the project root or from R/.
+# Deliberately plain: `%||%` is not base R and sys.frame() behaves differently
+# under Rscript, source() and RStudio's Run button.
+candidates <- c("data/processed/matches.csv", "../data/processed/matches.csv")
+path <- candidates[file.exists(candidates)][1]
+if (is.na(path)) {
+  stop("matches.csv not found. Run src/ingest_afl.py first, then run this ",
+       "from the project root.")
+}
+
+matches <- read.csv(path, stringsAsFactors = FALSE)
+stopifnot(nrow(matches) > 2000)
+
+# Reconcile the scores before trusting anything else: goals * 6 + behinds
+# must equal the recorded score. This is the same guard the Python ingest
+# applies, restated here so the R path is independently safe.
+stopifnot(all(matches$home_goals * 6 + matches$home_behinds == matches$home_score))
+stopifnot(all(matches$away_goals * 6 + matches$away_behinds == matches$away_score))
+
+ha <- matches[matches$stage == "home_and_away", ]
+
+# One row per team per match.
+long <- bind_rows(
+  ha %>% transmute(season, round, date, team = home,
+                   goals = home_goals, shots = home_shots),
+  ha %>% transmute(season, round, date, team = away,
+                   goals = away_goals, shots = away_shots)
+)
+
+# ---- 1. Binomial reliability ------------------------------------------
+# var(observed) = var(skill) + E[binomial noise]
+# so  reliability = 1 - E[p(1-p)/n] / var(observed)
+ts <- long %>%
+  group_by(season, team) %>%
+  summarise(goals = sum(goals), shots = sum(shots), .groups = "drop") %>%
+  mutate(accuracy = goals / shots)
+
+p_pool <- sum(ts$goals) / sum(ts$shots)
+observed_var <- var(ts$accuracy)
+noise_var <- mean(p_pool * (1 - p_pool) / ts$shots)
+reliability <- max(observed_var - noise_var, 0) / observed_var
+
+cat("Binomial decomposition\n")
+cat(sprintf("  team-seasons          %d\n", nrow(ts)))
+cat(sprintf("  league conversion     %.4f\n", p_pool))
+cat(sprintf("  observed sd           %.4f\n", sqrt(observed_var)))
+cat(sprintf("  binomial noise sd     %.4f\n", sqrt(noise_var)))
+cat(sprintf("  RELIABILITY           %.3f\n\n", reliability))
+
+# ---- 2. Split-half, odd vs even games ---------------------------------
+# Odd/even rather than first/second half: a side's form genuinely drifts
+# across a season, and a chronological split would charge that real change
+# to unreliability.
+halves <- long %>%
+  arrange(season, team, date) %>%
+  group_by(season, team) %>%
+  mutate(i = row_number(), half = if_else(i %% 2 == 1, "odd", "even")) %>%
+  group_by(season, team, half) %>%
+  summarise(acc = sum(goals) / sum(shots), n = n(), .groups = "drop") %>%
+  filter(n >= 3) %>%
+  select(-n) %>%
+  pivot_wider(names_from = half, values_from = acc) %>%
+  filter(!is.na(odd), !is.na(even))
+
+r <- cor(halves$odd, halves$even)
+sb <- 2 * r / (1 + r)   # Spearman-Brown: step a half-length sample up to full
+
+cat("Split-half\n")
+cat(sprintf("  units                 %d\n", nrow(halves)))
+cat(sprintf("  raw correlation       %+.3f\n", r))
+cat(sprintf("  Spearman-Brown        %.3f\n\n", sb))
+
+# ---- 3. Do the two methods agree? -------------------------------------
+# They rest on different assumptions -- the binomial estimate assumes shots
+# within a season are independent Bernoulli trials, the split-half estimate
+# assumes nothing of the sort. Agreement is evidence that the independence
+# assumption is not doing damage.
+gap <- abs(reliability - sb)
+cat(sprintf("Agreement between methods: %.3f vs %.3f (gap %.3f)\n",
+            reliability, sb, gap))
+if (gap > 0.15) {
+  cat("  WARNING: the two estimates disagree. The binomial independence\n")
+  cat("  assumption is suspect -- shots within a match may be correlated.\n")
+} else {
+  cat("  Consistent. Accuracy is roughly one-third skill, two-thirds luck.\n")
+}

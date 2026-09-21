@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# Secrets
+# ---------------------------------------------------------------------------
+.env
+.Renviron
+*.pem
+
+# ---------------------------------------------------------------------------
+# Data
+# ---------------------------------------------------------------------------
+# Raw API responses are a cache -- re-downloadable in about three minutes with
+# `python src/ingest_afl.py`. About 8 MB, so not worth committing.
+data/raw/
+
+# The processed match table is derived, but it is only ~400 KB and every other
+# script depends on it. Committing it means a fresh clone can run the analysis
+# without hitting the network, which matters for anyone reviewing this quickly.
+!data/processed/
+
+# ---------------------------------------------------------------------------
+# Language and editor noise
+# ---------------------------------------------------------------------------
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+.Rhistory
+.RData
+.Rproj.user/
+*.Rproj
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/settings.json

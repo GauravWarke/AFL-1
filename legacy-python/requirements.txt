@@ -1,0 +1,19 @@
+# Python dependencies.
+#
+#   pip install -r requirements.txt
+#
+# Only what src/ actually imports, verified by scanning the imports rather than
+# dumping whatever happened to be installed while building.
+
+pandas>=2.2
+numpy>=1.26
+matplotlib>=3.8
+
+# Deliberately absent:
+#
+#   requests      ingest uses urllib from the standard library. One less
+#                 dependency for a script that makes plain GET requests.
+#   scipy         the only distributions needed are a normal CDF (math.erf)
+#                 and a Poisson-binomial (built by convolution in numpy).
+#   scikit-learn  the ridge estimator is eight lines of numpy, and writing it
+#                 out is the point -- the penalty is derived, not tuned.

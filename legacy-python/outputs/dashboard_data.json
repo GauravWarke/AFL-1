@@ -1,0 +1,329 @@
+{
+ "generated": "4 September 2026, 2:09am AEST",
+ "season": 2026,
+ "sigma": 33.2,
+ "hga": {
+  "base": 2.53,
+  "interstate": 6.25,
+  "tz": 1.25
+ },
+ "drift": 9.72,
+ "teams": [
+  {
+   "team": "Hawthorn",
+   "ladder_pos": 4,
+   "rating": 13.5,
+   "pts": 64,
+   "percentage": 120.1,
+   "p_premier": 0.2914,
+   "p_grand_final": 0.5334,
+   "p_prelim": 1.0,
+   "p_finals": 1.0,
+   "freq": "about 3 Septembers in 10"
+  },
+  {
+   "team": "Sydney",
+   "ladder_pos": 2,
+   "rating": 20.5,
+   "pts": 72,
+   "percentage": 136.1,
+   "p_premier": 0.271,
+   "p_grand_final": 0.539,
+   "p_prelim": 0.8834,
+   "p_finals": 1.0,
+   "freq": "about 3 Septembers in 10"
+  },
+  {
+   "team": "Brisbane Lions",
+   "ladder_pos": 3,
+   "rating": 16.6,
+   "pts": 64,
+   "percentage": 121.7,
+   "p_premier": 0.1845,
+   "p_grand_final": 0.3927,
+   "p_prelim": 0.7615,
+   "p_finals": 1.0,
+   "freq": "about 2 Septembers in 10"
+  },
+  {
+   "team": "Fremantle",
+   "ladder_pos": 1,
+   "rating": 20.2,
+   "pts": 76,
+   "percentage": 137.2,
+   "p_premier": 0.1201,
+   "p_grand_final": 0.2768,
+   "p_prelim": 0.7298,
+   "p_finals": 1.0,
+   "freq": "about 1 September in 10"
+  },
+  {
+   "team": "Geelong",
+   "ladder_pos": 5,
+   "rating": 18.7,
+   "pts": 60,
+   "percentage": 122.3,
+   "p_premier": 0.0941,
+   "p_grand_final": 0.1549,
+   "p_prelim": 0.2936,
+   "p_finals": 1.0,
+   "freq": "about 1 September in 11"
+  },
+  {
+   "team": "Adelaide",
+   "ladder_pos": 6,
+   "rating": 13.1,
+   "pts": 60,
+   "percentage": 117.3,
+   "p_premier": 0.0247,
+   "p_grand_final": 0.0672,
+   "p_prelim": 0.2083,
+   "p_finals": 1.0,
+   "freq": "about 1 September in 41"
+  },
+  {
+   "team": "Carlton",
+   "ladder_pos": 10,
+   "rating": 1.2,
+   "pts": 50,
+   "percentage": 101.5,
+   "p_premier": 0.0085,
+   "p_grand_final": 0.0204,
+   "p_prelim": 0.0615,
+   "p_finals": 1.0,
+   "freq": "about 1 September in 117"
+  },
+  {
+   "team": "Western Bulldogs",
+   "ladder_pos": 8,
+   "rating": 4.4,
+   "pts": 54,
+   "percentage": 95.4,
+   "p_premier": 0.0056,
+   "p_grand_final": 0.0157,
+   "p_prelim": 0.062,
+   "p_finals": 1.0,
+   "freq": "about 1 September in 178"
+  },
+  {
+   "team": "Melbourne",
+   "ladder_pos": 7,
+   "rating": 4.8,
+   "pts": 60,
+   "percentage": 109.6,
+   "p_premier": 0.0,
+   "p_grand_final": 0.0,
+   "p_prelim": 0.0,
+   "p_finals": 0.0,
+   "freq": "out"
+  },
+  {
+   "team": "Collingwood",
+   "ladder_pos": 9,
+   "rating": 4.9,
+   "pts": 52,
+   "percentage": 102.4,
+   "p_premier": 0.0,
+   "p_grand_final": 0.0,
+   "p_prelim": 0.0,
+   "p_finals": 0.0,
+   "freq": "out"
+  }
+ ],
+ "played": [
+  {
+   "stage": "Wildcard Final",
+   "venue": "M.C.G.",
+   "date": "2026-08-28",
+   "home": "Western Bulldogs",
+   "away": "Collingwood",
+   "home_score": 96,
+   "away_score": 93,
+   "winner": "Western Bulldogs",
+   "margin": 3,
+   "home_shots": 26,
+   "away_shots": 23
+  },
+  {
+   "stage": "Wildcard Final",
+   "venue": "M.C.G.",
+   "date": "2026-08-29",
+   "home": "Melbourne",
+   "away": "Carlton",
+   "home_score": 55,
+   "away_score": 74,
+   "winner": "Carlton",
+   "margin": 19,
+   "home_shots": 20,
+   "away_shots": 24
+  },
+  {
+   "stage": "Qualifying Final",
+   "venue": "Perth Stadium",
+   "date": "2026-09-03",
+   "home": "Fremantle",
+   "away": "Hawthorn",
+   "home_score": 40,
+   "away_score": 72,
+   "winner": "Hawthorn",
+   "margin": 32,
+   "home_shots": 15,
+   "away_shots": 22
+  }
+ ],
+ "upcoming": [
+  {
+   "stage": "Elimination Final",
+   "home": "Geelong",
+   "away": "Carlton",
+   "venue": "M.C.G.",
+   "exp_margin": 20.0,
+   "p_home": 0.727
+  },
+  {
+   "stage": "Qualifying Final",
+   "home": "Sydney",
+   "away": "Brisbane Lions",
+   "venue": "S.C.G.",
+   "exp_margin": 12.7,
+   "p_home": 0.649
+  },
+  {
+   "stage": "Elimination Final",
+   "home": "Adelaide",
+   "away": "Western Bulldogs",
+   "venue": "Adelaide Oval",
+   "exp_margin": 18.2,
+   "p_home": 0.708
+  }
+ ],
+ "shots": {
+  "Fremantle": {
+   "team": "Fremantle",
+   "accuracy": 0.5304,
+   "shots_for": 27.2,
+   "shots_against": 20.7,
+   "shot_diff": 6.5
+  },
+  "Sydney": {
+   "team": "Sydney",
+   "accuracy": 0.5614,
+   "shots_for": 29.0,
+   "shots_against": 23.7,
+   "shot_diff": 5.4
+  },
+  "Brisbane Lions": {
+   "team": "Brisbane Lions",
+   "accuracy": 0.5471,
+   "shots_for": 29.1,
+   "shots_against": 24.3,
+   "shot_diff": 4.8
+  },
+  "Hawthorn": {
+   "team": "Hawthorn",
+   "accuracy": 0.5232,
+   "shots_for": 27.2,
+   "shots_against": 22.0,
+   "shot_diff": 5.2
+  },
+  "Geelong": {
+   "team": "Geelong",
+   "accuracy": 0.5536,
+   "shots_for": 27.2,
+   "shots_against": 23.3,
+   "shot_diff": 3.9
+  },
+  "Adelaide": {
+   "team": "Adelaide",
+   "accuracy": 0.576,
+   "shots_for": 24.3,
+   "shots_against": 23.0,
+   "shot_diff": 1.3
+  },
+  "Melbourne": {
+   "team": "Melbourne",
+   "accuracy": 0.5594,
+   "shots_for": 26.3,
+   "shots_against": 23.9,
+   "shot_diff": 2.5
+  },
+  "Western Bulldogs": {
+   "team": "Western Bulldogs",
+   "accuracy": 0.5228,
+   "shots_for": 22.9,
+   "shots_against": 25.1,
+   "shot_diff": -2.2
+  },
+  "Collingwood": {
+   "team": "Collingwood",
+   "accuracy": 0.527,
+   "shots_for": 24.2,
+   "shots_against": 23.4,
+   "shot_diff": 0.7
+  },
+  "Carlton": {
+   "team": "Carlton",
+   "accuracy": 0.5142,
+   "shots_for": 24.4,
+   "shots_against": 23.4,
+   "shot_diff": 1.0
+  },
+  "St Kilda": {
+   "team": "St Kilda",
+   "accuracy": 0.5186,
+   "shots_for": 24.6,
+   "shots_against": 24.1,
+   "shot_diff": 0.5
+  },
+  "Greater Western Sydney": {
+   "team": "Greater Western Sydney",
+   "accuracy": 0.5236,
+   "shots_for": 24.9,
+   "shots_against": 24.6,
+   "shot_diff": 0.3
+  },
+  "Gold Coast": {
+   "team": "Gold Coast",
+   "accuracy": 0.5234,
+   "shots_for": 24.2,
+   "shots_against": 25.3,
+   "shot_diff": -1.2
+  },
+  "North Melbourne": {
+   "team": "North Melbourne",
+   "accuracy": 0.5263,
+   "shots_for": 23.1,
+   "shots_against": 26.1,
+   "shot_diff": -3.0
+  },
+  "Port Adelaide": {
+   "team": "Port Adelaide",
+   "accuracy": 0.483,
+   "shots_for": 23.0,
+   "shots_against": 23.8,
+   "shot_diff": -0.9
+  },
+  "West Coast": {
+   "team": "West Coast",
+   "accuracy": 0.466,
+   "shots_for": 21.1,
+   "shots_against": 27.1,
+   "shot_diff": -6.0
+  },
+  "Richmond": {
+   "team": "Richmond",
+   "accuracy": 0.4772,
+   "shots_for": 19.0,
+   "shots_against": 28.8,
+   "shot_diff": -9.8
+  },
+  "Essendon": {
+   "team": "Essendon",
+   "accuracy": 0.5022,
+   "shots_for": 19.8,
+   "shots_against": 29.0,
+   "shot_diff": -9.2
+  }
+ },
+ "skill_vs_uniform": 0.016
+}
