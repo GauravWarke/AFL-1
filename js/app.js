@@ -939,7 +939,10 @@ function binom(n, p){ let c = 0; for (let i = 0; i < n; i++) if (rnd() < p) c++;
 
   var trav = F.effects.filter(function(e){ return /travel/i.test(e.name); })[0];
   /* Travel ledger. Same diverging idiom as the draw chart: polarity is carried
-     by side of zero and by a signed label, never by colour alone. */
+     by side of zero and by a signed label, never by colour alone.
+     NOTE: Travel calculation is currently simplified (trips × 5.8).
+     A more precise destination-weighted calculation exists in the methodology PDF
+     but differs from this dashboard output. See afl-draw-methodology.pdf for details. */
   (function(){
     var rows = TEAMS.slice().sort(function(a,b){ return b.travelPts - a.travelPts; });
     var mx = Math.max.apply(null, rows.map(function(t){ return Math.abs(t.travelPts); })) || 1;
